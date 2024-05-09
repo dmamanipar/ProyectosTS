@@ -52,7 +52,7 @@ pipeline {
             steps {
 			    timeout(time: 8, unit: 'MINUTES'){
 					// Ejecutar mvn spring-boot:run
-					sh "mvn spring-boot:run -f SysAsistenciaAn/pom.xml"
+					echo "mvn spring-boot:run -f SysAsistenciaAn/pom.xml"
                 }
                 //echo "mvn spring-boot:run -f SysAsistenciaAn/pom.xml"
             }
