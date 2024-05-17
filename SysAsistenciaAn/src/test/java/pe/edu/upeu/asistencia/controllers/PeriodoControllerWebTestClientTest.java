@@ -25,6 +25,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import pe.edu.upeu.asistencia.dtos.CredencialesDto;
 import pe.edu.upeu.asistencia.dtos.UsuarioCrearDto;
+import pe.edu.upeu.asistencia.models.Periodo;
 
 /**
  *
@@ -84,7 +85,7 @@ public class PeriodoControllerWebTestClientTest {
                 }
             }
         } catch (JSONException e) {
-            System.out.println("saliooooo:" +e.getMessage());
+            System.out.println("saliooooo:" + e.getMessage());
         }
     }
 
@@ -92,20 +93,100 @@ public class PeriodoControllerWebTestClientTest {
     public void tearDown() {
     }
 
+    Periodo periodo;
+    Long idx;
+    
     @Test
     @Order(1)
     public void testListarPeriodo() {
         System.out.println("ddd:" + token);
-         webTestClient.get().uri("http://localhost:" + this.port + "/asis/periodo/list")
+        webTestClient.get().uri("http://localhost:" + this.port + "/asis/periodo/list")
                 .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$[0].nombre").isEqualTo("2023-2")
-                .jsonPath("$[0].estado").isEqualTo("Activo")
+                .jsonPath("$[0].estado").isEqualTo("Inactivo")
                 .jsonPath("$").isArray()
-                .jsonPath("$").value(Matchers.hasSize(2));
+                .jsonPath("$").value(Matchers.hasSize(5));
     }
+
+    @Test
+    @Order(2)
+    public void testGuardarPeriodo() {
+        /*Periodo periodo = Periodo.builder()
+                .nombre("2024-2")
+                .estado("Inactivo").build();*/
+        periodo = Periodo.builder()
+                .nombre("2024-2")
+                .estado("Inactivo").build();
+
+                try {
+            var datoBuscado= webTestClient.post().uri("http://localhost:" + this.port + "/asis/periodo/crear")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(periodo)
+                .exchange()
+                .expectStatus().isOk()
+                    .expectBody(String.class)
+                    .returnResult()
+                    .getResponseBody();
+             
+            JSONObject jsonObj = new JSONObject(datoBuscado);
+            if (jsonObj.length() > 1) {
+                idx = Long.parseLong(jsonObj.getString("id"));
+            }
+        } catch (JSONException e) {
+            System.out.println("Error:"+e);
+        }
+            
+            System.out.println("DATO:"+idx);
+        
+    }
+
+    @Test
+    @Order(3)
+    public void testActualizarPeriodo() {
+       Periodo periodox = Periodo.builder()
+                .nombre("2023-2")
+                .estado("Inactivo").build();
+
+        Long id = 31L;
+
+        webTestClient.put().uri("http://localhost:" + this.port + "/asis/periodo/editar/{id}", id)
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(periodox)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @Order(4)
+    public void testBuscarPeriodo() {
+        Long id = 31L;
+
+        webTestClient.get().uri("http://localhost:" + this.port + "/asis/periodo/buscar/{id}", id)
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.nombre").isEqualTo("2023-2")
+                .jsonPath("$.estado").isEqualTo("Inactivo");
+    }
+    
+    @Test
+    @Order(5)
+    public void testEliminarPeriodo() {
+        System.out.println("Elimnar: "+idx);
+        webTestClient.delete().uri("http://localhost:" + this.port + "/asis/periodo/eliminar/{id}", idx)
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+
 
 }
