@@ -6,6 +6,7 @@ package pe.edu.upeu.asistencia.repositories;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pe.edu.upeu.asistencia.models.Periodo;
 
@@ -14,6 +15,10 @@ import pe.edu.upeu.asistencia.models.Periodo;
  * @author EP-Ing_Sist.-CALIDAD
  */
 @Repository
-public interface PeriodoRepository extends JpaRepository<Periodo, Long>{
+public interface PeriodoRepository extends JpaRepository<Periodo, Long> {
+
     Optional<Periodo> findByNombre(String nombre);
+
+    @Query(value = "SELECT MAX(id) FROM upeu_periodo", nativeQuery = true)
+    Long findMaxId();
 }
