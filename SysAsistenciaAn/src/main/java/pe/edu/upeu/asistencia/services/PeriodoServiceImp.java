@@ -70,5 +70,9 @@ public class PeriodoServiceImp implements PeriodoService {
         
         return periodoRepo.save(periodox);
     }
-
+    
+    @Override
+    public Long findMaxId(){
+        return  periodoRepo.findMaxId();
+    }
 }

@@ -54,12 +54,12 @@ public class PeriodoRepositoryTests {
             System.out.println(periodo.getNombre()+ " "+periodo.getEstado());
         }
         //then
-        Assertions.assertEquals(lista.size(), 3);
+        Assertions.assertEquals(lista.size(), 12);
     }
     
     @Test
     public void testActualizarPeriodo(){
-        Periodo px= repository.findById(34L).get();
+        Periodo px= repository.findById(repository.findMaxId()).get();
         px.setEstado("Inactivo");
         //When
         Periodo p=testEntityManager.persist(px);
@@ -81,7 +81,6 @@ public class PeriodoRepositoryTests {
     public void testBuscarPeriodo(){
     
     }
-    
     
 
 }

@@ -24,5 +24,7 @@ public interface PeriodoService {
     Periodo getPeriodoById(Long id);
 
     Periodo update(Periodo periodo, Long id);
+    
+    public Long findMaxId();
 
 }

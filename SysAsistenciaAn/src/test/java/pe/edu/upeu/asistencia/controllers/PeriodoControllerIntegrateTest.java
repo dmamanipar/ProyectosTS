@@ -47,7 +47,7 @@ public class PeriodoControllerIntegrateTest {
 
         token = given()
                 .contentType(ContentType.JSON)
-                .body(new CredencialesDto("emoises@upeu.edu.pe", "Da12345*")) //.toCharArray()
+                .body(new CredencialesDto("moises@upeu.edu.pe", "Da12345*")) //.toCharArray()
                 .when().post("/asis/login")
                 .andReturn().jsonPath().getString("token");
         if (token==null) {

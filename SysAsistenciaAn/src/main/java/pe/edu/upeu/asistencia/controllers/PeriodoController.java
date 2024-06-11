@@ -67,5 +67,11 @@ public class PeriodoController {
     public ResponseEntity<Periodo> updatePeriodo(@PathVariable Long id, @RequestBody Periodo periodoDetails) {        
         Periodo updatedPeriodo = periodoService.update(periodoDetails, id);
         return ResponseEntity.ok(updatedPeriodo);
+    }  
+    
+    @GetMapping("/buscarmaxid")
+    public ResponseEntity<Long> findMaxId() {        
+        Long idx = periodoService.findMaxId();
+        return ResponseEntity.ok(idx);
     }    
 }
